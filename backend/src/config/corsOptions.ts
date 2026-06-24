@@ -9,8 +9,8 @@ const allowedOrigins = [
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    
-    if (!origin && env.NODE_ENV === 'development') {
+    // Allow requests with no origin (like mobile apps, curl, or same-origin requests)
+    if (!origin) {
       return callback(null, true);
     }
     if (origin && allowedOrigins.includes(origin)) {
