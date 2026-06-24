@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { LogOut, User, Fingerprint, X, Camera, Save, Loader2, AlertCircle, Mail, AlertTriangle, Settings, Activity, Hexagon } from 'lucide-react';
+import { LogOut, User, X, Camera, Save, Loader2, AlertCircle, Mail, AlertTriangle, Settings, Hexagon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial } from '@react-three/drei';
