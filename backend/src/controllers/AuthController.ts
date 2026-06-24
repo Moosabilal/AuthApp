@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../services/AuthService';
+import { IAuthService } from '../interfaces/IAuthService';
 import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import { verifyRefreshToken } from '../utils/jwt';
@@ -18,7 +18,7 @@ const cookieOptions = () => ({
 });
 
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: IAuthService) {}
 
   
 

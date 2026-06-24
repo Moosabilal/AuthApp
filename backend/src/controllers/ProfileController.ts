@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { ProfileService } from '../services/ProfileService';
+import { IProfileService } from '../interfaces/IProfileService';
 import { catchAsync } from '../utils/catchAsync';
 import { UpdateProfileInput, RequestEmailChangeInput } from '../middlewares/schemas/profile.schema';
 
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: IProfileService) {}
 
   
 

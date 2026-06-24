@@ -25,7 +25,9 @@ const BCRYPT_ROUNDS = 12;
 
 
 
-export class AuthService {
+import { IAuthService } from '../interfaces/IAuthService';
+
+export class AuthService implements IAuthService {
   constructor(
     private readonly userRepo: IUserRepository,
     private readonly emailService: IEmailService

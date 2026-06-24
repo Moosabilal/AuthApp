@@ -5,7 +5,9 @@ import { IStorageService } from '../interfaces/IStorageService';
 import { PublicUser } from './AuthService';
 import { AppError } from '../utils/AppError';
 
-export class ProfileService {
+import { IProfileService } from '../interfaces/IProfileService';
+
+export class ProfileService implements IProfileService {
   constructor(
     private readonly userRepo: IUserRepository,
     private readonly emailService: IEmailService,
