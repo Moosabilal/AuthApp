@@ -80,4 +80,76 @@ export class UserRepository implements IUserRepository {
       { new: false } // we don't need the updated document back
     );
   }
+
+  async setPasswordResetToken(userId: string, hashedToken: string | null, expires: Date | null): Promise<void> {
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { passwordResetToken: hashedToken, passwordResetExpires: expires } },
+      { new: false }
+    );
+  }
+
+  async findByPasswordResetToken(hashedToken: string): Promise<IUser | null> {
+    const doc = await User.findOne({ 
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: new Date() } // MUST be valid (future date)
+    })
+      .select('+passwordResetToken')
+      .lean();
+    return doc ? toIUser(doc) : null;
+  }
+
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    await User.findByIdAndUpdate(
+      userId,
+      { 
+        $set: { password: passwordHash },
+        $unset: { passwordResetToken: 1, passwordResetExpires: 1 } 
+      },
+      { new: false }
+    );
+  }
+
+  async updateProfile(userId: string, data: { name?: string; avatarUrl?: string }): Promise<IUser | null> {
+    const doc = await User.findByIdAndUpdate(
+      userId,
+      { $set: data },
+      { new: true, runValidators: true }
+    ).lean();
+    return doc ? toIUser(doc) : null;
+  }
+
+  async setEmailVerificationToken(userId: string, pendingEmail: string | null, hashedToken: string | null): Promise<void> {
+    if (pendingEmail && hashedToken) {
+      await User.findByIdAndUpdate(
+        userId,
+        { $set: { pendingEmail, emailVerificationToken: hashedToken } },
+        { new: false }
+      );
+    } else {
+      await User.findByIdAndUpdate(
+        userId,
+        { $unset: { pendingEmail: 1, emailVerificationToken: 1 } },
+        { new: false }
+      );
+    }
+  }
+
+  async findByEmailVerificationToken(hashedToken: string): Promise<IUser | null> {
+    const doc = await User.findOne({ emailVerificationToken: hashedToken })
+      .select('+emailVerificationToken')
+      .lean();
+    return doc ? toIUser(doc) : null;
+  }
+
+  async updateEmail(userId: string, newEmail: string): Promise<void> {
+    await User.findByIdAndUpdate(
+      userId,
+      { 
+        $set: { email: newEmail },
+        $unset: { pendingEmail: 1, emailVerificationToken: 1 }
+      },
+      { new: false, runValidators: true }
+    );
+  }
 }

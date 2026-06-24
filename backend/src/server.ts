@@ -43,8 +43,13 @@ if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+import path from 'path';
+
 // ── API Routes ────────────────────────────────────────────────────────────────
 app.use('/api', router);
+
+// ── Static Files ──────────────────────────────────────────────────────────────
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // ── 404 Handler ───────────────────────────────────────────────────────────────
 app.all('*', (req: Request, _res: Response, next: NextFunction): void => {

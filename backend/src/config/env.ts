@@ -17,6 +17,14 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
   CLIENT_URL: z.string().default('http://localhost:5173'),
+  CLOUDINARY_CLOUD_NAME: z.string().min(1, 'CLOUDINARY_CLOUD_NAME is required'),
+  CLOUDINARY_API_KEY: z.string().min(1, 'CLOUDINARY_API_KEY is required'),
+  CLOUDINARY_API_SECRET: z.string().min(1, 'CLOUDINARY_API_SECRET is required'),
+  SMTP_HOST: z.string().min(1, 'SMTP_HOST is required'),
+  SMTP_PORT: z.coerce.number().default(587),
+  SMTP_USER: z.string().min(1, 'SMTP_USER is required'),
+  SMTP_PASS: z.string().min(1, 'SMTP_PASS is required'),
+  SMTP_FROM: z.string().email('SMTP_FROM must be a valid email address'),
 });
 
 const parsed = envSchema.safeParse(process.env);

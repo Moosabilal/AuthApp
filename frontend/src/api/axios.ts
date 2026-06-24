@@ -5,7 +5,6 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'ax
 const api: AxiosInstance = axios.create({
   baseURL: '/api',               // proxied to http://localhost:5000/api via vite.config.ts
   withCredentials: true,         // send the HTTP-only refresh cookie on every request
-  headers: { 'Content-Type': 'application/json' },
   timeout: 10_000,
 });
 

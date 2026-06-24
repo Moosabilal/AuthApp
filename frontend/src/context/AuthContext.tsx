@@ -38,6 +38,9 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     case 'UPDATE_TOKEN':
       return { ...state, accessToken: action.payload.accessToken };
 
+    case 'UPDATE_USER':
+      return { ...state, user: action.payload.user };
+
     case 'LOGOUT':
       return { ...initialState, isLoading: false };
 
@@ -52,6 +55,7 @@ interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: User) => void;
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -120,8 +124,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
+  const updateUser = useCallback((user: User) => {
+    dispatch({ type: 'UPDATE_USER', payload: { user } });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ ...state, login, signup, logout }}>
+    <AuthContext.Provider value={{ ...state, login, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

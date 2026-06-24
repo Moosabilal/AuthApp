@@ -19,6 +19,16 @@ export interface IUser {
    * Set to null on logout to revoke the session.
    */
   refreshToken: string | null;
+  /** Public URL for the user's avatar image. */
+  avatarUrl?: string;
+  /** Hashed token for password reset verification (select: false). */
+  passwordResetToken?: string;
+  /** Expiry date for the password reset token. */
+  passwordResetExpires?: Date;
+  /** Stores the requested new email until it is verified. */
+  pendingEmail?: string;
+  /** Hashed token to verify the pendingEmail (select: false). */
+  emailVerificationToken?: string;
   createdAt: Date;
   updatedAt: Date;
 }

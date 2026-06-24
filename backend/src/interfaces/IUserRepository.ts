@@ -41,4 +41,40 @@ export interface IUserRepository {
    * Pass null to revoke the session (logout).
    */
   updateRefreshToken(userId: string, refreshToken: string | null): Promise<void>;
+
+  /**
+   * Update a user's password reset token and expiration.
+   */
+  setPasswordResetToken(userId: string, hashedToken: string | null, expires: Date | null): Promise<void>;
+
+  /**
+   * Find a user by their password reset token.
+   * Explicitly includes the passwordResetToken field.
+   */
+  findByPasswordResetToken(hashedToken: string): Promise<IUser | null>;
+
+  /**
+   * Update user's password and clear reset tokens.
+   */
+  updatePassword(userId: string, passwordHash: string): Promise<void>;
+
+  /**
+   * Update profile fields (name, avatar).
+   */
+  updateProfile(userId: string, data: { name?: string; avatarUrl?: string }): Promise<IUser | null>;
+
+  /**
+   * Set pending email and verification token.
+   */
+  setEmailVerificationToken(userId: string, pendingEmail: string | null, hashedToken: string | null): Promise<void>;
+
+  /**
+   * Find a user by email verification token.
+   */
+  findByEmailVerificationToken(hashedToken: string): Promise<IUser | null>;
+
+  /**
+   * Verify email: swap pendingEmail to email, clear tokens.
+   */
+  updateEmail(userId: string, newEmail: string): Promise<void>;
 }

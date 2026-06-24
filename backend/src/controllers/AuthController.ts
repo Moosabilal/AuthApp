@@ -4,7 +4,7 @@ import { catchAsync } from '../utils/catchAsync';
 import { AppError } from '../utils/AppError';
 import { verifyRefreshToken } from '../utils/jwt';
 import { env } from '../config/env';
-import { SignupInput, LoginInput } from '../middlewares/schemas/auth.schema';
+import { SignupInput, LoginInput, ForgotPasswordInput, ResetPasswordInput } from '../middlewares/schemas/auth.schema';
 
 const REFRESH_COOKIE = 'refreshToken';
 
@@ -95,6 +95,32 @@ export class AuthController {
     res.status(200).json({
       status: 'success',
       data: { user },
+    });
+  });
+
+  // ── POST /api/auth/forgot-password ─────────────────────────────────────────
+
+  forgotPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const { email } = req.body as ForgotPasswordInput;
+    await this.authService.forgotPassword(email);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'If an account with that email exists, a password reset link has been sent.',
+    });
+  });
+
+  // ── POST /api/auth/reset-password/:token ───────────────────────────────────
+
+  resetPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const { token } = req.params;
+    const { newPassword } = req.body as ResetPasswordInput;
+    
+    await this.authService.resetPassword(token, newPassword);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password has been successfully reset. Please log in.',
     });
   });
 }

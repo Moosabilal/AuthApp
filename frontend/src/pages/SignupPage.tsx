@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
-import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const SignupPage: React.FC = () => {
   const { signup } = useAuth();
@@ -10,12 +10,25 @@ const SignupPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    // Frontend Validation
+    if (name.trim().length < 2) {
+      return setError('Name must be at least 2 characters long.');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return setError('Please enter a valid email address.');
+    }
+    if (password.length < 8) {
+      return setError('Password must be at least 8 characters long.');
+    }
+
     setIsLoading(true);
     try {
       await signup(name, email, password);
@@ -91,13 +104,21 @@ const SignupPage: React.FC = () => {
               whileFocus={{ scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               id="password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Min. 8 characters"
-              className="w-full bg-[#030712]/50 border border-slate-700/50 rounded-xl pl-10 pr-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full bg-[#030712]/50 border border-slate-700/50 rounded-xl pl-10 pr-12 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-indigo-400 transition-colors focus:outline-none"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            </button>
           </div>
         </div>
 

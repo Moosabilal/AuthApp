@@ -4,6 +4,8 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  avatarUrl?: string;
+  pendingEmail?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -20,4 +22,5 @@ export type AuthAction =
   | { type: 'AUTH_SUCCESS'; payload: { user: User; accessToken: string } }
   | { type: 'AUTH_FAILURE' }
   | { type: 'UPDATE_TOKEN'; payload: { accessToken: string } }
+  | { type: 'UPDATE_USER'; payload: { user: User } }
   | { type: 'LOGOUT' };

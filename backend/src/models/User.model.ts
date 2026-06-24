@@ -10,6 +10,11 @@ export interface IUserDocument extends Document {
   email: string;
   password: string;       // select: false — excluded by default
   refreshToken: string | null; // select: false — excluded by default
+  avatarUrl?: string;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
+  pendingEmail?: string;
+  emailVerificationToken?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,6 +54,34 @@ const userSchema = new Schema<IUserDocument>(
       type: String,
       default: null,
       select: false, // ← Excluded from query results; only fetched when needed
+    },
+
+    avatarUrl: {
+      type: String,
+    },
+
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+
+    passwordResetExpires: {
+      type: Date,
+    },
+
+    pendingEmail: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      match: [
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        'Please provide a valid email address',
+      ],
+    },
+
+    emailVerificationToken: {
+      type: String,
+      select: false,
     },
   },
   {
