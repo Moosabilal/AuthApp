@@ -9,7 +9,7 @@ export class NodemailerEmailService implements IEmailService {
     this.transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
       port: env.SMTP_PORT,
-      secure: env.SMTP_PORT === 465, 
+      secure: env.SMTP_PORT === 465,
       auth: {
         user: env.SMTP_USER,
         pass: env.SMTP_PASS,
@@ -68,11 +68,6 @@ export class NodemailerEmailService implements IEmailService {
         </p>
       </div>
     `;
-    console.log(html);
-    console.log(otp);
-    console.log(to);
-    console.log(env.SMTP_FROM);
-
 
     await this.transporter.sendMail({
       from: env.SMTP_FROM,
