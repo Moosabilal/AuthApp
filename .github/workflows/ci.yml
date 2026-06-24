@@ -15,7 +15,6 @@ jobs:
   backend:
     name: Backend (Node.js / TypeScript)
     runs-on: ubuntu-latest
-    if: hashFiles('backend/package.json') != ''
 
     defaults:
       run:
@@ -51,7 +50,6 @@ jobs:
   frontend:
     name: Frontend (React / Vite / TypeScript)
     runs-on: ubuntu-latest
-    if: hashFiles('frontend/package.json') != ''
 
     defaults:
       run:
