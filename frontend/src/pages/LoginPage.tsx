@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
 
-    // Frontend Validation
+    
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return setError('Please enter a valid email address.');
     }

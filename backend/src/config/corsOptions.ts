@@ -9,7 +9,7 @@ const allowedOrigins = [
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    // Allow server-to-server requests (no origin) in development; block in production
+    
     if (!origin && env.NODE_ENV === 'development') {
       return callback(null, true);
     }

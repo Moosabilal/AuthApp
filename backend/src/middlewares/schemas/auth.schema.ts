@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// ─── Signup ───────────────────────────────────────────────────────────────────
+
 export const signupSchema = z.object({
   name: z
     .string({ required_error: 'Name is required' })
@@ -18,7 +18,7 @@ export const signupSchema = z.object({
     .max(128, 'Password cannot exceed 128 characters'),
 });
 
-// ─── Login ────────────────────────────────────────────────────────────────────
+
 export const loginSchema = z.object({
   email: z
     .string({ required_error: 'Email is required' })

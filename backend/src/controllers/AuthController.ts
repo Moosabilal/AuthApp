@@ -8,19 +8,19 @@ import { SignupInput, LoginInput, ForgotPasswordInput, ResetPasswordInput } from
 
 const REFRESH_COOKIE = 'refreshToken';
 
-/** Cookie options applied to every Set-Cookie header for the refresh token */
+
 const cookieOptions = () => ({
-  httpOnly: true,                              // not accessible via document.cookie
-  secure: env.NODE_ENV === 'production',       // HTTPS-only in prod
-  sameSite: 'strict' as const,               // CSRF protection
-  maxAge: 7 * 24 * 60 * 60 * 1000,           // 7 days in ms — mirrors JWT_REFRESH_EXPIRES_IN
-  path: '/api/auth',                           // scoped: cookie only sent to /api/auth/*
+  httpOnly: true,                              
+  secure: env.NODE_ENV === 'production',       
+  sameSite: 'strict' as const,               
+  maxAge: 7 * 24 * 60 * 60 * 1000,           
+  path: '/api/auth',                           
 });
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // ── POST /api/auth/signup ──────────────────────────────────────────────────
+  
 
   signup = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { name, email, password } = req.body as SignupInput;
@@ -33,7 +33,7 @@ export class AuthController {
     });
   });
 
-  // ── POST /api/auth/login ───────────────────────────────────────────────────
+  
 
   login = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body as LoginInput;
@@ -46,7 +46,7 @@ export class AuthController {
     });
   });
 
-  // ── POST /api/auth/refresh ─────────────────────────────────────────────────
+  
 
   refresh = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const incomingToken = req.cookies[REFRESH_COOKIE] as string | undefined;
@@ -63,18 +63,18 @@ export class AuthController {
     });
   });
 
-  // ── POST /api/auth/logout ──────────────────────────────────────────────────
+  
 
   logout = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const incomingToken = req.cookies[REFRESH_COOKIE] as string | undefined;
 
     if (incomingToken) {
       try {
-        // Best-effort: revoke server-side even if token is near-expiry
+        
         const payload = verifyRefreshToken(incomingToken);
         await this.authService.logout(payload.sub);
       } catch {
-        // Token invalid/expired — still clear the cookie below
+        
       }
     }
 
@@ -85,10 +85,10 @@ export class AuthController {
     });
   });
 
-  // ── GET /api/auth/me  (protected) ─────────────────────────────────────────
+  
 
   getMe = catchAsync(async (req: Request, res: Response): Promise<void> => {
-    // req.user is populated by authGuard middleware
+    
     const userId = req.user!.sub;
     const user = await this.authService.getMe(userId);
 
@@ -98,7 +98,7 @@ export class AuthController {
     });
   });
 
-  // ── POST /api/auth/forgot-password ─────────────────────────────────────────
+  
 
   forgotPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body as ForgotPasswordInput;
@@ -110,7 +110,7 @@ export class AuthController {
     });
   });
 
-  // ── POST /api/auth/reset-password/:token ───────────────────────────────────
+  
 
   resetPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { token } = req.params;

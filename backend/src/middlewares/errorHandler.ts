@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/AppError';
 import { env } from '../config/env';
 
-// ── Mongoose-specific error handlers ──────────────────────────────────────────
+
 
 interface MongoError extends Error {
   code?: number;
@@ -35,7 +35,7 @@ const handleJWTError = (): AppError =>
 const handleJWTExpiredError = (): AppError =>
   new AppError('Your session has expired. Please log in again.', 401);
 
-// ── Response helpers ──────────────────────────────────────────────────────────
+
 
 const sendErrorDev = (err: AppError, res: Response): void => {
   res.status(err.statusCode).json({
@@ -52,7 +52,7 @@ const sendErrorProd = (err: AppError, res: Response): void => {
       message: err.message,
     });
   } else {
-    // Don't leak implementation details in production
+    
     console.error('💥 UNEXPECTED ERROR:', err);
     res.status(500).json({
       status: 'error',
@@ -61,7 +61,7 @@ const sendErrorProd = (err: AppError, res: Response): void => {
   }
 };
 
-// ── Global Error Handler ──────────────────────────────────────────────────────
+
 
 export const globalErrorHandler = (
   err: Error,
@@ -72,7 +72,7 @@ export const globalErrorHandler = (
   const baseErr = err as AppError & MongoError;
   const statusCode = baseErr.statusCode ?? 500;
 
-  // Build a normalised AppError (avoids mutating readonly fields on AppError)
+  
   let normalisedErr = new AppError(err.message, statusCode);
 
   if (env.NODE_ENV === 'development') {
@@ -80,7 +80,7 @@ export const globalErrorHandler = (
     return;
   }
 
-  // Production: map known error types to descriptive operational errors
+  
   if (baseErr.name === 'CastError') normalisedErr = handleCastErrorDB(baseErr);
   else if (baseErr.code === 11000) normalisedErr = handleDuplicateFieldsDB(baseErr);
   else if (baseErr.name === 'ValidationError') normalisedErr = handleValidationErrorDB(baseErr);

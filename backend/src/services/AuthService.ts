@@ -10,9 +10,9 @@ import {
   verifyRefreshToken,
 } from '../utils/jwt';
 
-// ─── Public Types ─────────────────────────────────────────────────────────────
 
-/** User shape returned to the client — sensitive fields stripped */
+
+
 export type PublicUser = Omit<IUser, 'password' | 'refreshToken' | 'passwordResetToken' | 'passwordResetExpires' | 'emailVerificationToken'>;
 
 export interface AuthPayload {
@@ -23,7 +23,7 @@ export interface AuthPayload {
 
 const BCRYPT_ROUNDS = 12;
 
-// ─── Service ──────────────────────────────────────────────────────────────────
+
 
 export class AuthService {
   constructor(
@@ -31,7 +31,7 @@ export class AuthService {
     private readonly emailService: IEmailService
   ) {}
 
-  // ── Signup ─────────────────────────────────────────────────────────────────
+  
 
   async signup(name: string, email: string, password: string): Promise<AuthPayload> {
     const existing = await this.userRepo.findByEmail(email);
@@ -49,7 +49,7 @@ export class AuthService {
     return { user: this.sanitise(user), accessToken, refreshToken };
   }
 
-  // ── Login ──────────────────────────────────────────────────────────────────
+  
 
   async login(email: string, password: string): Promise<AuthPayload> {
     const user = await this.userRepo.findByEmailWithPassword(email);
@@ -65,7 +65,7 @@ export class AuthService {
     return { user: this.sanitise(user), accessToken, refreshToken };
   }
 
-  // ── Refresh (token rotation) ────────────────────────────────────────────────
+  
 
   async refresh(incomingToken: string): Promise<AuthPayload> {
     const jwtPayload = verifyRefreshToken(incomingToken);
@@ -85,13 +85,13 @@ export class AuthService {
     return { user: this.sanitise(cleanUser), accessToken, refreshToken: newRefreshToken };
   }
 
-  // ── Logout ─────────────────────────────────────────────────────────────────
+  
 
   async logout(userId: string): Promise<void> {
     await this.userRepo.updateRefreshToken(userId, null);
   }
 
-  // ── Get Me ─────────────────────────────────────────────────────────────────
+  
 
   async getMe(userId: string): Promise<PublicUser> {
     const user = await this.userRepo.findById(userId);
@@ -99,28 +99,28 @@ export class AuthService {
     return this.sanitise(user);
   }
 
-  // ── Forgot Password ────────────────────────────────────────────────────────
+  
 
   async forgotPassword(email: string): Promise<void> {
     const user = await this.userRepo.findByEmail(email);
     if (!user) {
-      // Do not reveal that the user does not exist
+      
       return;
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     
-    // Expires in 10 minutes
+    
     const expires = new Date(Date.now() + 10 * 60 * 1000);
 
     await this.userRepo.setPasswordResetToken(user._id.toString(), hashedToken, expires);
 
-    // Dispatch RAW token via email
+    
     await this.emailService.sendPasswordResetEmail(user.email, resetToken);
   }
 
-  // ── Reset Password ─────────────────────────────────────────────────────────
+  
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
@@ -134,7 +134,7 @@ export class AuthService {
     await this.userRepo.updatePassword(user._id.toString(), newHashedPassword);
   }
 
-  // ── Private Helpers ────────────────────────────────────────────────────────
+  
 
   private sanitise(user: IUser): PublicUser {
     return {

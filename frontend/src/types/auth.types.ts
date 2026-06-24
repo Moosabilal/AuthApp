@@ -1,4 +1,4 @@
-// ── Shared frontend types ─────────────────────────────────────────────────────
+
 
 export interface User {
   _id: string;

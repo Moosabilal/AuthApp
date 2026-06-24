@@ -11,14 +11,14 @@ interface AuthSceneProps {
 const AuthScene: React.FC<AuthSceneProps> = ({ children, routeKey }) => {
   return (
     <div className="relative min-h-screen w-full bg-[#030712] overflow-hidden">
-      {/* 3D Background */}
+      
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 15], fov: 60 }}>
           <ParticleConstellation />
         </Canvas>
       </div>
 
-      {/* UI Overlay layer */}
+      
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-8">
         <AnimatePresence mode="wait">
           <motion.div

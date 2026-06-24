@@ -11,7 +11,7 @@ const ParticleConstellation: React.FC = () => {
 
   const { mouse, viewport } = useThree();
 
-  // Initialize particle positions and velocities
+  
   const [positions, velocities] = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT * 3);
     const vel = new Float32Array(PARTICLE_COUNT * 3);
@@ -37,27 +37,27 @@ const ParticleConstellation: React.FC = () => {
   useFrame(() => {
     if (!pointsRef.current || !linesRef.current || !pointGeoRef.current || !lineGeoRef.current) return;
 
-    // Mouse parallax effect
+    
     const targetX = (mouse.x * viewport.width) / 10;
     const targetY = (mouse.y * viewport.height) / 10;
     
-    // Animate positions
+    
     let vertexpos = 0;
     let colorpos = 0;
     let numConnected = 0;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Apply velocity
+      
       positions[i * 3] += velocities[i * 3];
       positions[i * 3 + 1] += velocities[i * 3 + 1];
       positions[i * 3 + 2] += velocities[i * 3 + 2];
 
-      // Bounce off walls
+      
       if (Math.abs(positions[i * 3]) > 15) velocities[i * 3] *= -1;
       if (Math.abs(positions[i * 3 + 1]) > 15) velocities[i * 3 + 1] *= -1;
       if (Math.abs(positions[i * 3 + 2]) > 15) velocities[i * 3 + 2] *= -1;
 
-      // Calculate connections
+      
       for (let j = i + 1; j < PARTICLE_COUNT; j++) {
         const dx = positions[i * 3] - positions[j * 3];
         const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
@@ -75,10 +75,10 @@ const ParticleConstellation: React.FC = () => {
           linePositions[vertexpos++] = positions[j * 3 + 1];
           linePositions[vertexpos++] = positions[j * 3 + 2];
 
-          // Indigo glow colors
-          const r = 0.38 + 0.1 * alpha; // ~99 for indigo
-          const g = 0.40 + 0.1 * alpha; // ~102
-          const b = 0.94;               // ~241
+          
+          const r = 0.38 + 0.1 * alpha; 
+          const g = 0.40 + 0.1 * alpha; 
+          const b = 0.94;               
 
           lineColors[colorpos++] = r;
           lineColors[colorpos++] = g;
@@ -99,7 +99,7 @@ const ParticleConstellation: React.FC = () => {
     lineGeoRef.current.attributes.position.needsUpdate = true;
     lineGeoRef.current.attributes.color.needsUpdate = true;
 
-    // Rotate whole constellation slightly based on mouse
+    
     pointsRef.current.rotation.x += (targetY * 0.05 - pointsRef.current.rotation.x) * 0.02;
     pointsRef.current.rotation.y += (targetX * 0.05 - pointsRef.current.rotation.y) * 0.02;
     linesRef.current.rotation.x = pointsRef.current.rotation.x;

@@ -6,7 +6,7 @@ import { UpdateProfileInput, RequestEmailChangeInput } from '../middlewares/sche
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  // ── PATCH /api/profile ───────────────────────────────────────────────────────
+  
 
   updateProfile = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.sub;
@@ -21,7 +21,7 @@ export class ProfileController {
     });
   });
 
-  // ── POST /api/profile/request-email-change ─────────────────────────────────
+  
 
   requestEmailChange = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.sub;
@@ -35,7 +35,7 @@ export class ProfileController {
     });
   });
 
-  // ── POST /api/profile/verify-email ─────────────────────────────────────────
+  
 
   verifyEmailChange = catchAsync(async (req: Request, res: Response): Promise<void> => {
     const { otp } = req.body;

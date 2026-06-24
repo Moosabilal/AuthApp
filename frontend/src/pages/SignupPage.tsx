@@ -18,7 +18,7 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     
-    // Frontend Validation
+    
     if (name.trim().length < 2) {
       return setError('Name must be at least 2 characters long.');
     }

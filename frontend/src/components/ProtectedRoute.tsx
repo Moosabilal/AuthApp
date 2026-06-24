@@ -6,11 +6,7 @@ interface ProtectedRouteProps {
   children: ReactNode;
 }
 
-/**
- * Wraps any route that requires authentication.
- * - While the session is being restored (isLoading), shows a full-screen spinner.
- * - If not authenticated after load, redirects to /login, preserving the intended path.
- */
+
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();

@@ -1,4 +1,4 @@
-import './config/env'; // Must be first — loads and validates all env vars
+import './config/env'; 
 
 import express, { Application, Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
@@ -16,13 +16,13 @@ import { AppError } from './utils/AppError';
 
 const app: Application = express();
 
-// ── Security ──────────────────────────────────────────────────────────────────
+
 app.use(helmet());
 app.use(cors(corsOptions));
 
-// ── Rate Limiting (applied to all /api routes) ────────────────────────────────
+
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000, 
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
@@ -33,33 +33,33 @@ const apiLimiter = rateLimit({
 });
 app.use('/api', apiLimiter);
 
-// ── Request Parsing ───────────────────────────────────────────────────────────
+
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-// ── HTTP Request Logging (dev only) ──────────────────────────────────────────
+
 if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 import path from 'path';
 
-// ── API Routes ────────────────────────────────────────────────────────────────
+
 app.use('/api', router);
 
-// ── Static Files ──────────────────────────────────────────────────────────────
+
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
-// ── 404 Handler ───────────────────────────────────────────────────────────────
+
 app.all('*', (req: Request, _res: Response, next: NextFunction): void => {
   next(new AppError(`Route '${req.originalUrl}' not found on this server.`, 404));
 });
 
-// ── Global Error Handler ──────────────────────────────────────────────────────
+
 app.use(globalErrorHandler);
 
-// ── Server Initialisation ─────────────────────────────────────────────────────
+
 const startServer = async (): Promise<void> => {
   await connectDB();
 
@@ -68,7 +68,7 @@ const startServer = async (): Promise<void> => {
     console.log(`📋  Health check: http://localhost:${env.PORT}/api/health\n`);
   });
 
-  // ── Graceful Shutdown ──────────────────────────────────────────────────────
+  
   const gracefulShutdown = async (signal: string): Promise<void> => {
     console.log(`\n⚡  ${signal} received. Starting graceful shutdown...`);
 
@@ -84,7 +84,7 @@ const startServer = async (): Promise<void> => {
       process.exit(0);
     });
 
-    // Force-kill if shutdown takes longer than 10 seconds
+    
     setTimeout(() => {
       console.error('⏱   Graceful shutdown timed out. Forcing exit.');
       process.exit(1);
@@ -94,7 +94,7 @@ const startServer = async (): Promise<void> => {
   process.on('SIGTERM', () => void gracefulShutdown('SIGTERM'));
   process.on('SIGINT', () => void gracefulShutdown('SIGINT'));
 
-  // ── Unhandled Rejections / Exceptions ─────────────────────────────────────
+  
   process.on('unhandledRejection', (reason: unknown) => {
     console.error('💥  UNHANDLED REJECTION:', reason);
     server.close(() => process.exit(1));

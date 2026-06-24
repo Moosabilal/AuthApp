@@ -83,3 +83,9 @@ Desktop.ini
 .eslintcache
 .stylelintcache
 *.local
+
+# ============================================================
+# Local Agents / Skills
+# ============================================================
+.agents/
+skills-lock.json

@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import api from '@/api/axios';
 import { User as UserType } from '@/types/auth.types';
 
-// ─── 3D Core Indicator ────────────────────────────────────────────────────────
+
 const CoreIndicator: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -41,16 +41,16 @@ const CoreIndicator: React.FC = () => {
   );
 };
 
-// ─── Dashboard Component ──────────────────────────────────────────────────────
+
 const DashboardPage: React.FC = () => {
   const { user, logout, updateUser } = useAuth();
   
-  // UI State
+  
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Form State
+  
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -64,7 +64,7 @@ const DashboardPage: React.FC = () => {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync state if user context updates from another tab/component
+  
   useEffect(() => {
     if (user && !isSettingsOpen) {
       setName(user.name);
@@ -80,7 +80,7 @@ const DashboardPage: React.FC = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
-      // Client-side validation: Limit to 10MB
+      
       if (file.size > 10 * 1024 * 1024) {
         setError('Image size must be less than 10MB.');
         return;
@@ -96,7 +96,7 @@ const DashboardPage: React.FC = () => {
     e.preventDefault();
     if (!user) return;
 
-    // Frontend Validation
+    
     if (name.trim().length < 2) {
       return setError('Name must be at least 2 characters long.');
     }
@@ -110,7 +110,7 @@ const DashboardPage: React.FC = () => {
     let emailChanged = false;
 
     try {
-      // 1. Profile Update (Name / Avatar)
+      
       if (name !== user.name || avatarFile) {
         const formData = new FormData();
         if (name !== user.name) formData.append('name', name);
@@ -121,11 +121,11 @@ const DashboardPage: React.FC = () => {
         didUpdate = true;
       }
 
-      // 2. Email Change Request
+      
       if (email !== user.email && email.trim() !== '') {
         await api.post('/profile/request-email-change', { newEmail: email });
         
-        // Refetch user to get the pendingEmail attached
+        
         const { data: meData } = await api.get<{ data: { user: UserType } }>('/auth/me');
         updateUser(meData.data.user);
         didUpdate = true;
@@ -139,7 +139,7 @@ const DashboardPage: React.FC = () => {
           setIsSettingsOpen(false);
         }
       } else {
-        // Nothing changed
+        
         setIsSettingsOpen(false);
       }
     } catch (err: unknown) {
@@ -160,7 +160,7 @@ const DashboardPage: React.FC = () => {
     try {
       await api.post('/profile/verify-email', { otp });
       await logout();
-      window.location.href = '/login'; // explicitly navigate to login
+      window.location.href = '/login'; 
     } catch (err: unknown) {
       const msg = err && typeof err === 'object' && 'response' in err
           ? (err as any).response?.data?.message
@@ -184,7 +184,7 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  // Close dropdown when clicking outside (simple implementation)
+  
   useEffect(() => {
     const handleClickOutside = () => setDropdownOpen(false);
     document.addEventListener('click', handleClickOutside);
@@ -196,14 +196,14 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#030712] relative overflow-hidden flex flex-col font-sans">
       
-      {/* ─── 3D Background ─── */}
+      
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
          <Canvas camera={{ position: [0, 0, 10] }}>
             <CoreIndicator />
          </Canvas>
       </div>
 
-      {/* ─── Header ─── */}
+      
       <header className="relative z-20 backdrop-blur-md bg-[#0f1729]/60 border-b border-indigo-500/20 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
@@ -261,7 +261,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </header>
 
-      {/* ─── Main Content ─── */}
+      
       <main className="relative z-10 flex-1 flex flex-col max-w-6xl w-full mx-auto p-6 lg:p-12 w-full">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -310,11 +310,11 @@ const DashboardPage: React.FC = () => {
         </motion.div>
       </main>
 
-      {/* ─── Profile Settings Modal ─── */}
+      
       <AnimatePresence>
         {isSettingsOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            {/* Backdrop */}
+            
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -323,7 +323,7 @@ const DashboardPage: React.FC = () => {
               className="absolute inset-0 bg-[#030712]/80 backdrop-blur-sm"
             />
 
-            {/* Modal */}
+            
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -341,7 +341,7 @@ const DashboardPage: React.FC = () => {
 
               {showOtpInput ? (
                 <form onSubmit={handleVerifyOtp} className="space-y-6">
-                  {/* Error Banner */}
+                  
                   <AnimatePresence>
                     {error && (
                       <motion.div
@@ -391,7 +391,7 @@ const DashboardPage: React.FC = () => {
               ) : (
                 <form onSubmit={handleSave} className="space-y-6">
                   
-                  {/* Error Banner */}
+                  
                   <AnimatePresence>
                     {error && (
                       <motion.div
@@ -406,7 +406,7 @@ const DashboardPage: React.FC = () => {
                     )}
                   </AnimatePresence>
 
-                  {/* Avatar Upload */}
+                  
                   <div className="flex flex-col items-center justify-center mb-2">
                     <div 
                       className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-indigo-500/50 cursor-pointer group shadow-lg"
@@ -420,7 +420,7 @@ const DashboardPage: React.FC = () => {
                         </div>
                       )}
                       
-                      {/* Hover Overlay */}
+                      
                       <div className="absolute inset-0 bg-[#030712]/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <Camera className="w-8 h-8 text-white" />
                       </div>
@@ -494,7 +494,7 @@ const DashboardPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* ─── Logout Confirmation Modal ─── */}
+      
       <AnimatePresence>
         {showLogoutConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center px-4">

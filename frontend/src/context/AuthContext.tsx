@@ -9,13 +9,13 @@ import React, {
 import api, { setAccessToken } from '@/api/axios';
 import { User, AuthState, AuthAction } from '@/types/auth.types';
 
-// ── Reducer ───────────────────────────────────────────────────────────────────
+
 
 const initialState: AuthState = {
   user: null,
   accessToken: null,
   isAuthenticated: false,
-  isLoading: true, // true on mount: we attempt a silent refresh before rendering
+  isLoading: true, 
 };
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
@@ -49,7 +49,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-// ── Context Types ─────────────────────────────────────────────────────────────
+
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -58,11 +58,11 @@ interface AuthContextValue extends AuthState {
   updateUser: (user: User) => void;
 }
 
-// ── Context ───────────────────────────────────────────────────────────────────
+
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-// ── Provider ──────────────────────────────────────────────────────────────────
+
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -71,9 +71,9 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // ── Silent refresh on mount ────────────────────────────────────────────────
-  // Attempts to restore the session from the HTTP-only cookie without requiring
-  // the user to log in again after a page reload.
+  
+  
+  
   useEffect(() => {
     const initAuth = async () => {
       dispatch({ type: 'AUTH_INIT_START' });
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     void initAuth();
   }, []);
 
-  // ── Login ──────────────────────────────────────────────────────────────────
+  
   const login = useCallback(async (email: string, password: string): Promise<void> => {
     const { data } = await api.post<{ data: { user: User; accessToken: string } }>(
       '/auth/login',
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     dispatch({ type: 'AUTH_SUCCESS', payload: data.data });
   }, []);
 
-  // ── Signup ─────────────────────────────────────────────────────────────────
+  
   const signup = useCallback(
     async (name: string, email: string, password: string): Promise<void> => {
       const { data } = await api.post<{ data: { user: User; accessToken: string } }>(
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     []
   );
 
-  // ── Logout ─────────────────────────────────────────────────────────────────
+  
   const logout = useCallback(async (): Promise<void> => {
     try {
       await api.post('/auth/logout');
@@ -135,7 +135,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// ── Hook ──────────────────────────────────────────────────────────────────────
+
 
 export const useAuth = (): AuthContextValue => {
   const ctx = useContext(AuthContext);

@@ -14,13 +14,13 @@ const AnimatedRoutes: React.FC = () => {
 
   return (
     <Routes location={location} key={location.pathname}>
-      {/* Public routes wrapped in the 3D AuthScene */}
+      
       <Route path="/login"  element={<AuthScene routeKey="login"><LoginPage /></AuthScene>} />
       <Route path="/signup" element={<AuthScene routeKey="signup"><SignupPage /></AuthScene>} />
       <Route path="/forgot-password" element={<AuthScene routeKey="forgot-password"><ForgotPasswordPage /></AuthScene>} />
       <Route path="/reset-password/:token" element={<AuthScene routeKey="reset-password"><ResetPasswordPage /></AuthScene>} />
 
-      {/* Protected routes */}
+      
       <Route
         path="/dashboard"
         element={
@@ -30,7 +30,7 @@ const AnimatedRoutes: React.FC = () => {
         }
       />
 
-      {/* Fallback */}
+      
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

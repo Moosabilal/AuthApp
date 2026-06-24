@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { AppError } from './AppError';
 
-// ─── Token Payload Shapes ─────────────────────────────────────────────────────
+
 
 export interface AccessTokenPayload {
-  sub: string;   // user MongoDB ObjectId as string
+  sub: string;   
   email: string;
   iat?: number;
   exp?: number;
@@ -17,7 +17,7 @@ export interface RefreshTokenPayload {
   exp?: number;
 }
 
-// ─── Sign ─────────────────────────────────────────────────────────────────────
+
 
 export const signAccessToken = (userId: string, email: string): string =>
   jwt.sign({ sub: userId, email }, env.JWT_ACCESS_SECRET, {
@@ -29,7 +29,7 @@ export const signRefreshToken = (userId: string): string =>
     expiresIn: env.JWT_REFRESH_EXPIRES_IN,
   } as jwt.SignOptions);
 
-// ─── Verify ───────────────────────────────────────────────────────────────────
+
 
 export const verifyAccessToken = (token: string): AccessTokenPayload => {
   try {

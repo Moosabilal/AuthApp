@@ -53,7 +53,7 @@ export class ProfileService {
     await this.userRepo.setEmailVerificationToken(userId, newEmail, hashedToken);
     console.log('✅ [requestEmailChange] Token set');
 
-    // Send the raw OTP to the NEW email
+    
     await this.emailService.sendEmailVerification(newEmail, otp);
     console.log('✅ [requestEmailChange] OTP sent');
   }
@@ -69,13 +69,13 @@ export class ProfileService {
     const oldEmail = user.email;
     const newEmail = user.pendingEmail;
 
-    // Update email and unset pending/verification fields
+    
     await this.userRepo.updateEmail(user._id.toString(), newEmail);
 
-    // Revoke current session so they must log in with new email
+    
     await this.userRepo.updateRefreshToken(user._id.toString(), null);
 
-    // Dual Notification Flow
+    
     await this.emailService.sendEmailChangeConfirmation(newEmail);
     await this.emailService.sendSecurityAlertEmailChanged(oldEmail);
   }

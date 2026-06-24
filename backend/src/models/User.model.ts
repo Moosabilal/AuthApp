@@ -1,15 +1,15 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-// ─── Mongoose Document Interface ──────────────────────────────────────────────
-// Extends Document so Mongoose gets its internal fields (_id, __v, save, etc.)
-// while we add our own typed fields. This stays in the data layer only.
+
+
+
 
 export interface IUserDocument extends Document {
   _id: Types.ObjectId;
   name: string;
   email: string;
-  password: string;       // select: false — excluded by default
-  refreshToken: string | null; // select: false — excluded by default
+  password: string;       
+  refreshToken: string | null; 
   avatarUrl?: string;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
@@ -19,7 +19,7 @@ export interface IUserDocument extends Document {
   updatedAt: Date;
 }
 
-// ─── Schema Definition ────────────────────────────────────────────────────────
+
 
 const userSchema = new Schema<IUserDocument>(
   {
@@ -47,13 +47,13 @@ const userSchema = new Schema<IUserDocument>(
       type: String,
       required: [true, 'Password is required'],
       minlength: [8, 'Password must be at least 8 characters'],
-      select: false, // ← CRITICAL: never returned in query results by default
+      select: false, 
     },
 
     refreshToken: {
       type: String,
       default: null,
-      select: false, // ← Excluded from query results; only fetched when needed
+      select: false, 
     },
 
     avatarUrl: {
@@ -85,9 +85,9 @@ const userSchema = new Schema<IUserDocument>(
     },
   },
   {
-    timestamps: true, // adds createdAt + updatedAt automatically
-    versionKey: false, // removes __v field from documents
-    // Sanitise output: strip __id internal references and rename _id to id
+    timestamps: true, 
+    versionKey: false, 
+    
     toJSON: {
       virtuals: true,
       transform: (_doc, ret: Record<string, unknown>) => {
@@ -98,10 +98,10 @@ const userSchema = new Schema<IUserDocument>(
   }
 );
 
-// ─── Indexes ──────────────────────────────────────────────────────────────────
-// email is already indexed via unique: true above.
-// Sparse index on refreshToken supports fast session lookups during rotation.
+
+
+
 userSchema.index({ refreshToken: 1 }, { sparse: true });
 
-// ─── Model Export ─────────────────────────────────────────────────────────────
+
 export const User = model<IUserDocument>('User', userSchema);

@@ -12,7 +12,7 @@ import { validate } from '../middlewares/validate';
 import { updateProfileSchema, requestEmailChangeSchema, verifyEmailChangeSchema } from '../middlewares/schemas/profile.schema';
 import { AppError } from '../utils/AppError';
 
-// ─── Multer Configuration ─────────────────────────────────────────────────────
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -22,10 +22,10 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ 
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
-// ─── Dependency Injection Wiring ──────────────────────────────────────────────
+
 const userRepository = new UserRepository();
 const emailService = new NodemailerEmailService();
 const storageService = new CloudinaryStorageService();
@@ -34,10 +34,10 @@ const profileController = new ProfileController(profileService);
 
 export const profileRouter = Router();
 
-// All profile routes are protected
+
 profileRouter.use(authGuard);
 
-// ─── Middleware Wrapper for Error Handling ────────────────────────────────────
+
 const uploadAvatarMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const uploadSingle = upload.single('avatar');
   uploadSingle(req, res, (err) => {
@@ -48,7 +48,7 @@ const uploadAvatarMiddleware = (req: Request, res: Response, next: NextFunction)
   });
 };
 
-// updateProfile now uses uploadAvatarMiddleware before validation
+
 profileRouter.patch('/', uploadAvatarMiddleware, validate(updateProfileSchema), profileController.updateProfile);
 profileRouter.post('/request-email-change', validate(requestEmailChangeSchema), profileController.requestEmailChange);
 profileRouter.post('/verify-email', validate(verifyEmailChangeSchema), profileController.verifyEmailChange);
