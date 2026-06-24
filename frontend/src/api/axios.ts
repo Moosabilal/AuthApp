@@ -5,7 +5,7 @@ import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'ax
 const api: AxiosInstance = axios.create({
   baseURL: '/api',               
   withCredentials: true,         
-  timeout: 10_000,
+  timeout: 60_000,
 });
 
 
